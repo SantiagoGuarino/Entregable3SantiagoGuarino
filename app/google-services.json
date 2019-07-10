@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "413219515735",
+    "firebase_url": "https://entregabletres-cd8ae.firebaseio.com",
+    "project_id": "entregabletres-cd8ae",
+    "storage_bucket": "entregabletres-cd8ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413219515735:android:cded834f09b31efb",
+        "android_client_info": {
+          "package_name": "com.example.entregabletres"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413219515735-t2sl4ju1767npsnlj34o1vk9kmj1uhev.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.entregabletres",
+            "certificate_hash": "277dc53141506315c341bc2bb46148a358f88947"
+          }
+        },
+        {
+          "client_id": "413219515735-akcja26utavt9n56i37p9ujgp87vjaa5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7J-Sn6gly7BTHrjQWt40_Txi_GdsPSBY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "413219515735-akcja26utavt9n56i37p9ujgp87vjaa5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
