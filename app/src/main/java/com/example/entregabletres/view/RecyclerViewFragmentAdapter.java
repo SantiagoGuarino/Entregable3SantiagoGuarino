@@ -1,5 +1,6 @@
 package com.example.entregabletres.view;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +14,36 @@ import com.bumptech.glide.Glide;
 import com.example.entregabletres.R;
 import com.example.entregabletres.model.pojo.Artista;
 import com.example.entregabletres.model.pojo.Obra;
+import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.http.Url;
 
 public class RecyclerViewFragmentAdapter extends RecyclerView.Adapter<RecyclerViewFragmentAdapter.RecyclerView> {
 
     private List<Obra> listaDeObras;
     private ObraSeleccionadaListener obraSeleccionadaListener;
     private List<Artista> listaDeArtistas;
+    private StorageReference mFirebaseStorage;
+    private StorageReference myImgRef;
+    private String exactMatch;
 
     public RecyclerViewFragmentAdapter(List<Obra> obras,List<Artista> listaDeArtistas, FragmentRecyclerViewFragment context){
         this.listaDeObras = obras;
         this.listaDeArtistas = listaDeArtistas;
         obraSeleccionadaListener = (ObraSeleccionadaListener) context;
         notifyDataSetChanged();
+        mFirebaseStorage =  FirebaseStorage.getInstance().getReference("artistPaints");
+
+
     }
 
     @NonNull
@@ -89,21 +104,33 @@ public class RecyclerViewFragmentAdapter extends RecyclerView.Adapter<RecyclerVi
         return m.find();
     }
 
-    public  void bindObraYArtista(ImageView imageView, View itemView, Obra obra){
-        String exactMatch = obra.getImage().substring(obra.getImage().lastIndexOf('/')+1
+    public  void bindObraYArtista(final ImageView imageView, final View itemView, Obra obra){
+        exactMatch = obra.getImage().substring(obra.getImage().lastIndexOf('/')+1
                 , obra.getImage().lastIndexOf(".")).toLowerCase();
-        for (Artista track: listaDeArtistas){
+        myImgRef = mFirebaseStorage.child(exactMatch+".png");
+        myImgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                for(Obra track: listaDeObras){
+                    if (isContain(track.getImage(), exactMatch)){
+                        Glide.with(itemView)
+                                .load(uri)
+                                .into(imageView);
+                    }
+                }
+            }
+        });
+       /* for (Artista track: listaDeArtistas){
             for (String urlObra: track.getObras()){
                 if(isContain(urlObra, exactMatch)){
                     Glide.with(itemView)
                             .load(urlObra)
                             .into(imageView);
-                }if(obra.getName().equals("Mila a la napo")){
-                    Glide.with(itemView)
-                            .load("https://firebasestorage.googleapis.com/v0/b/entregabletres-cd8ae.appspot.com/o/andy_milanapo.png?alt=media&token=9e1175e8-f86e-4751-944c-fd95f23b3af9")
-                            .into(imageView);
                 }
-            }
+                }
+            }*/
+
         }
+
     }
-}
+
