@@ -1,31 +1,37 @@
-package com.example.entregabletres.model.pojo;
+package com.example.entregabletres.model.Pojo;
 
+import com.google.firebase.database.PropertyName;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Artista implements Serializable {
-    private String Influenced_by;
+    @SerializedName("Influenced_by")
+    private String influencia;
     private String artistId;
     private String name;
     private String nationality;
-    private List<String> obras;
+   /* @SerializedName("pinturas")
+    private List<ArtistaPintura> pinturas;*/
+
 
     public Artista(){
 
     }
 
-    public Artista(String Influenced_by, String artistId, String name, String nationality, List<String> obras) {
-        this.Influenced_by = Influenced_by;
-        this.artistId = artistId;
-        this.name = name;
-        this.nationality = nationality;
-        this.obras = obras;
+   /* public List<ArtistaPintura> getPinturas() {
+        return pinturas;
     }
 
+    public void setPinturas(List<ArtistaPintura> pinturas) {
+        this.pinturas = pinturas;
+    }*/
+
+    @PropertyName("Influenced_by")
     public String getInfluencia() {
-        return Influenced_by;
+        return influencia;
     }
 
     public String getArtistId() {
@@ -40,7 +46,22 @@ public class Artista implements Serializable {
         return nationality;
     }
 
-    public List<String> getObras() {
-        return obras;
+    @PropertyName("Influenced_by")
+    public void setInfluencia(String influencia) {
+        this.influencia = influencia;
     }
+
+    public void setArtistId(String artistId) {
+        this.artistId = artistId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+
 }

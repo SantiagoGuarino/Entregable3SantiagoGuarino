@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ViewPagerFragment">
+    tools:context=".view.DataBaseFragment">
 
-    <androidx.viewpager.widget.ViewPager
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/view_pager_detalles4"
-        ></androidx.viewpager.widget.ViewPager>
+        android:text="@string/hello_blank_fragment" />
 
 </FrameLayout>

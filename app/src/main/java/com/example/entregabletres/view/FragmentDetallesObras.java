@@ -1,6 +1,7 @@
 package com.example.entregabletres.view;
 
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,46 +12,43 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.entregabletres.R;
-import com.example.entregabletres.model.pojo.Artista;
-import com.example.entregabletres.model.pojo.Obra;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.entregabletres.model.Pojo.Artista;
+import com.example.entregabletres.model.Pojo.ArtistaObraRecycler;
+import com.example.entregabletres.model.Pojo.Obra;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
-import org.w3c.dom.Text;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FragmentDetallesObras extends Fragment {
-    public static final String KEY_ARTISTAS = "artistas";
-    public static final String KEY_DETALLES = "detalles";
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference;
-    private Obra obra;
-    private ImageView imageView;
-    private TextView textViewNombreObra;
-    private TextView textViewNombreArtista;
-    private TextView textViewInfluencia;
-    private List<Artista> listaDeArtistas = new ArrayList<>();
+private TextView nombreObra;
+private ImageView imagenObra;
 
-    public static FragmentDetallesObras fragmentDetallesObras(Obra obra) {
-        FragmentDetallesObras fragmentDetallesObras= new FragmentDetallesObras();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(KEY_DETALLES, obra);
-        fragmentDetallesObras.setArguments(bundle);
-        return fragmentDetallesObras;
+private int position;
+private List<Obra> listadoObras = new ArrayList<>();
+private List<Artista> listadeArtistas = new ArrayList<>();
+    final static String KEY_NOMBRE_NACIONALIDAD = "nacionalidad";
+    final static String KEY_NOMBRE_ARTISTA = "nombreArtista";
+    final static String KEY_NOMBRE_INFLUENCED = "influenciados";
+    final static String KEY_NOMBRE_OBRA = "nombreObra";
+    final static String KEY_IMAGEN_OBRA = "imagenObra";
+
+
+    public FragmentDetallesObras() {
+        // Required empty public constructor
     }
 
 
@@ -58,63 +56,43 @@ public class FragmentDetallesObras extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_detales_obras, container, false);
+        View view =inflater.inflate(R.layout.fragment_detalles_obras, container, false);
+
+        imagenObra=view.findViewById(R.id.imagen_detalle_artista);
+        nombreObra=view.findViewById(R.id.nombre_detalle_artista);
         Bundle bundle = getArguments();
-        obra = (Obra) bundle.getSerializable(KEY_DETALLES);
-        listaDeArtistas = new ArrayList<>();
-        //Acá está el error
-        databaseReference = firebaseDatabase.getReference("artists");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot data: dataSnapshot.getChildren()){
-                    Artista artistaEncontrado = data.getValue(Artista.class);
-                    listaDeArtistas.add(artistaEncontrado);
-                    bindObraYArtista(imageView, obra);
-                    textViewNombreObra.setText(obra.getName());
-
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-        imageView = view.findViewById(R.id.img_view_detalles);
-        textViewNombreObra = view.findViewById(R.id.nombre_obra_detalles);
-        textViewNombreArtista = view.findViewById(R.id.nombre_artista_detalles);
-        textViewInfluencia = view.findViewById(R.id.influencia_detalles);
+        Glide.with(getContext())
+                .load(bundle.getString(KEY_IMAGEN_OBRA))
+                .into(imagenObra);
+        nombreObra.setText(bundle.getSerializable(KEY_NOMBRE_ARTISTA).toString());
         return view;
     }
 
-    public  void bindObraYArtista(ImageView imageView, Obra obra){
-        View itemView = getView();
-        String exactMatch = obra.getImage().substring(obra.getImage().lastIndexOf('/')+1
-                , obra.getImage().lastIndexOf(".")).toLowerCase();
-        for (Artista track: listaDeArtistas){
-            for (String urlObra: track.getObras()){
-                if(isContain(urlObra, exactMatch)){
-                    Glide.with(itemView)
-                            .load(urlObra)
-                            .into(imageView);
-                    textViewNombreArtista.setText(track.getName());
-                    textViewInfluencia.setText(track.getInfluencia());
-                }if(obra.getName().equals("Mila a la napo")){
-                    Glide.with(itemView)
-                            .load("https://firebasestorage.googleapis.com/v0/b/entregabletres-cd8ae.appspot.com/o/andy_milanapo.png?alt=media&token=9e1175e8-f86e-4751-944c-fd95f23b3af9")
-                            .into(imageView);
-                    textViewNombreArtista.setText(track.getName());
-                    textViewInfluencia.setText(track.getInfluencia());
-                }
-            }
-        }
+    public static FragmentDetallesObras generadorFragmentObra(ArtistaObraRecycler artista){
+        FragmentDetallesObras fragmentDetallesObras = new FragmentDetallesObras();
+        Bundle bundle = new Bundle();
+        bundle.putString(FragmentDetallesObras.KEY_NOMBRE_OBRA,artista.getObra().getName());
+        bundle.putString(FragmentDetallesObras.KEY_IMAGEN_OBRA,artista.getObra().getImage());
+        bundle.putString(FragmentDetallesObras.KEY_NOMBRE_NACIONALIDAD,artista.getArtista().getNationality());
+        bundle.putString(FragmentDetallesObras.KEY_NOMBRE_ARTISTA,artista.getArtista().getName());
+        bundle.putString(FragmentDetallesObras.KEY_NOMBRE_INFLUENCED,  artista.getArtista().getInfluencia());
+        fragmentDetallesObras.setArguments(bundle);
+        return fragmentDetallesObras;
     }
-    public static Boolean isContain(String source, String subItem){
-        String pattern = "\\b"+subItem+"\\b";
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(source);
-        return m.find();
+    /*
+    public static FragmentDetallesObras generadorFragmentObra(Obra obra){
+        FragmentDetallesObras fragmentDetallesObras = new FragmentDetallesObras();
+        Bundle bundle = new Bundle();
+        bundle.putString(FragmentDetallesObras.KEY_NOMBRE_OBRA,obra.getName());
+        bundle.putString(FragmentDetallesObras.KEY_NOMBRE_ARTISTA,obra.getArtistId());
+        bundle.putString(FragmentDetallesObras.KEY_NOMBRE_IMAGEN,  obra.getImage());
+        fragmentDetallesObras.setArguments(bundle);
+        return fragmentDetallesObras;
     }
+    */
+
+
+
 
 
 }

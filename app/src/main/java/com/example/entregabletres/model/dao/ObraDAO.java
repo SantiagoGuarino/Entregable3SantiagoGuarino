@@ -1,36 +1,35 @@
-package com.example.entregabletres.model.dao;
+package com.example.entregabletres.model.Dao;
+
 import com.example.entregabletres.model.MyRetrofit;
 import com.example.entregabletres.model.ObraService;
-import com.example.entregabletres.model.pojo.ObraContainer;
-import com.example.entregabletres.util.ObraHelper;
-import com.example.entregabletres.util.ResultListener;
+import com.example.entregabletres.model.Pojo.ObraContainer;
+import com.example.entregabletres.model.util.ObraHelper;
+import com.example.entregabletres.model.util.ResultListener;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ObraDAO extends MyRetrofit {
-    private ObraService obraService;
-
+    private ObraService service;
     public ObraDAO() {
         super(ObraHelper.BASE_URL);
-        obraService = retrofit.create(ObraService.class);
+        service = retrofit.create(ObraService.class);
     }
 
-    public void getObra(final ResultListener<ObraContainer> listenerDelController){
-        Call<ObraContainer> call = obraService.getObras();
-        call.enqueue(new Callback<ObraContainer>() {
-            @Override
-            public void onResponse(Call<ObraContainer> call, Response<ObraContainer> response) {
-                ObraContainer obraContainer = response.body();
-                listenerDelController.finish(obraContainer);
-            }
+    public void getObras (final ResultListener<ObraContainer> listener){
+    Call<ObraContainer> call =service.getObras();
+    call.enqueue(new Callback<ObraContainer>() {
+        @Override
+        public void onResponse(Call<ObraContainer> call, Response<ObraContainer> response) {
+            ObraContainer obraContainer = response.body();
+            listener.finish(obraContainer);
+        }
+        @Override
+        public void onFailure(Call<ObraContainer> call, Throwable t) {
+        }
+    });
+}
 
-            @Override
-            public void onFailure(Call<ObraContainer> call, Throwable t) {
-
-            }
-        });
-
-    }
 }

@@ -1,18 +1,19 @@
 package com.example.entregabletres.controller;
 
-import com.example.entregabletres.model.dao.ObraDAO;
-import com.example.entregabletres.model.pojo.ObraContainer;
-import com.example.entregabletres.util.ResultListener;
+import com.example.entregabletres.model.Dao.ObraDAO;
+import com.example.entregabletres.model.Pojo.ObraContainer;
+import com.example.entregabletres.model.util.ResultListener;
 
 public class ObraController {
 
-    public void getObras(final ResultListener<ObraContainer> listenerDeLaView){
-        ObraDAO obraDAO = new ObraDAO();
-        obraDAO.getObra(new ResultListener<ObraContainer>() {
-            @Override
-            public void finish(ObraContainer result) {
-                listenerDeLaView.finish(result);
-            }
-        });
-    }
+
+public void getObras (final ResultListener<ObraContainer> listener){
+    ObraDAO obraDAO =new ObraDAO();
+    obraDAO.getObras(new ResultListener<ObraContainer>() {
+        @Override
+        public void finish(ObraContainer result) {
+            listener.finish(result);
+        }
+    });
+}
 }

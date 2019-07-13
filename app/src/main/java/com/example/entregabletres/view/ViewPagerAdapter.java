@@ -4,29 +4,30 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.example.entregabletres.model.pojo.Obra;
-
+import com.example.entregabletres.model.Pojo.ArtistaObraRecycler;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private List<FragmentDetallesObras> listaDeFragmentDetalles;
+    private List<FragmentDetallesObras> fragmentDetallesObras;
 
-    public ViewPagerAdapter(FragmentManager fm, List<Obra> listaDeObras) {
+
+    public ViewPagerAdapter(FragmentManager fm,List<ArtistaObraRecycler> fragmentDetallesArtistas) {
         super(fm);
-        listaDeFragmentDetalles = new ArrayList<>();
-        for (Obra track: listaDeObras){
-            listaDeFragmentDetalles.add(FragmentDetallesObras.fragmentDetallesObras(track));
+        this.fragmentDetallesObras=new ArrayList<>();
+        for (ArtistaObraRecycler track: fragmentDetallesArtistas
+        ) {
+            this.fragmentDetallesObras.add(FragmentDetallesObras.generadorFragmentObra(track));
         }
     }
 
     @Override
     public Fragment getItem(int position) {
-        return listaDeFragmentDetalles.get(position);
+        return fragmentDetallesObras.get(position);
     }
 
     @Override
     public int getCount() {
-        return listaDeFragmentDetalles.size();
+        return fragmentDetallesObras.size();
     }
 }
