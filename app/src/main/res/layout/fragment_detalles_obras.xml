@@ -25,6 +25,34 @@
         app:layout_constraintTop_toBottomOf="@id/imagen_detalle_artista"
         app:layout_constraintLeft_toLeftOf="parent"
         />
+    <TextView
+        android:layout_marginTop="230dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_blank_fragment"
+        android:id="@+id/nombre_artista_detalle_artista"
+        app:layout_constraintTop_toBottomOf="@id/imagen_detalle_artista"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <TextView
+        android:layout_marginTop="260dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_blank_fragment"
+        android:id="@+id/nacionalidad_detalle_artista"
+        app:layout_constraintTop_toBottomOf="@id/imagen_detalle_artista"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <TextView
+        android:layout_marginTop="290dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_blank_fragment"
+        android:id="@+id/influencia_detalle_artista"
+        app:layout_constraintTop_toBottomOf="@id/imagen_detalle_artista"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
 
 
 

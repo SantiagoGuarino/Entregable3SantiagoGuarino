@@ -34,11 +34,7 @@ public static MyAppDataBase myAppDataBase;
         View view= inflater.inflate(R.layout.fragment_data_base, container, false);
 
         myAppDataBase= Room.databaseBuilder(getContext(),MyAppDataBase.class,"userdB").allowMainThreadQueries().build();
-/*        ArtistaROOM artistaROOM= new ArtistaROOM();
-        artistaROOM.setNombre("Rolando");
-        artistaROOM.setId(2);
-        myAppDataBase.myDAO().addUser(artistaROOM);*/
-        List<ArtistaROOM> list = myAppDataBase.myDAO().getUser();
+        List<ArtistaROOM> list = myAppDataBase.myDAO().getArtistas();
         int i = 0;
         return view;
     }

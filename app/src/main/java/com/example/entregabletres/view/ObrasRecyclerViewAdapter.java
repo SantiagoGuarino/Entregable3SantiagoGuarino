@@ -2,6 +2,7 @@ package com.example.entregabletres.view;
 
 import android.content.Context;
 
+import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.entregabletres.R;
 import com.example.entregabletres.model.Pojo.Obra;
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ import java.util.List;
 public class ObrasRecyclerViewAdapter extends RecyclerView.Adapter<ObrasRecyclerViewAdapter.ObrasRecyclerViewPager> {
 private List<Obra> listObras;
 private SeleccionarObraListener seleccionarObraListener;
+private Boolean aBoolean;
+
 
 public void setObrasAdapter (List<Obra> obras){
     listObras = obras;
@@ -28,10 +32,11 @@ public void setObrasAdapter (List<Obra> obras){
 }
 
 
-    public ObrasRecyclerViewAdapter(List<Obra> listadoDeObras, FragmentRecyclerObras context) {
+    public ObrasRecyclerViewAdapter(List<Obra> listadoDeObras, FragmentRecyclerObras context, Boolean aBoolean) {
         listObras=new ArrayList<>();
         this.listObras = listadoDeObras;
         seleccionarObraListener=(SeleccionarObraListener)context;
+        this.aBoolean = aBoolean;
     }
 
     @NonNull
@@ -69,12 +74,22 @@ public void setObrasAdapter (List<Obra> obras){
             });
         }
     public void bindObras(Obra obra){
-    nombreObra.setText(obra.getName().toString());
-    Glide.with(itemView.getContext())
-                .load(obra.getImage())
-                .into(imagenObra);
+            if (aBoolean = true){
+                nombreObra.setText(obra.getName().toString());
+                Glide.with(itemView.getContext())
+                        .load(obra.getImage())
+                        .into(imagenObra);
+            } else{
+                nombreObra.setText(obra.getName().toString());
+                Glide.with(itemView.getContext())
+                        .load(obra.getImage())
+                        .onlyRetrieveFromCache(true)
+                        .into(imagenObra);
+            }
+        }
     }
-    }
+
+
 
     public interface SeleccionarObraListener{
         public void seleccionarObraListener(Obra obra, int position);

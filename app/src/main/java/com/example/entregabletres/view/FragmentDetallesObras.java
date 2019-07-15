@@ -35,6 +35,9 @@ import java.util.List;
  */
 public class FragmentDetallesObras extends Fragment {
 private TextView nombreObra;
+private TextView nacionalidadObra;
+private TextView influenciaObra;
+private TextView nombreArtista;
 private ImageView imagenObra;
 
 private int position;
@@ -60,11 +63,19 @@ private List<Artista> listadeArtistas = new ArrayList<>();
 
         imagenObra=view.findViewById(R.id.imagen_detalle_artista);
         nombreObra=view.findViewById(R.id.nombre_detalle_artista);
+        nombreArtista = view.findViewById(R.id.nombre_artista_detalle_artista);
+        influenciaObra = view.findViewById(R.id.influencia_detalle_artista);
+        nacionalidadObra = view.findViewById(R.id.nacionalidad_detalle_artista);
+
         Bundle bundle = getArguments();
         Glide.with(getContext())
                 .load(bundle.getString(KEY_IMAGEN_OBRA))
+                .onlyRetrieveFromCache(true)
                 .into(imagenObra);
         nombreObra.setText(bundle.getSerializable(KEY_NOMBRE_ARTISTA).toString());
+        nombreArtista.setText(bundle.getSerializable(KEY_NOMBRE_ARTISTA).toString());
+        influenciaObra.setText(bundle.getSerializable(KEY_NOMBRE_INFLUENCED).toString());
+        nacionalidadObra.setText(bundle.getSerializable(KEY_NOMBRE_NACIONALIDAD).toString());
         return view;
     }
 
@@ -79,17 +90,7 @@ private List<Artista> listadeArtistas = new ArrayList<>();
         fragmentDetallesObras.setArguments(bundle);
         return fragmentDetallesObras;
     }
-    /*
-    public static FragmentDetallesObras generadorFragmentObra(Obra obra){
-        FragmentDetallesObras fragmentDetallesObras = new FragmentDetallesObras();
-        Bundle bundle = new Bundle();
-        bundle.putString(FragmentDetallesObras.KEY_NOMBRE_OBRA,obra.getName());
-        bundle.putString(FragmentDetallesObras.KEY_NOMBRE_ARTISTA,obra.getArtistId());
-        bundle.putString(FragmentDetallesObras.KEY_NOMBRE_IMAGEN,  obra.getImage());
-        fragmentDetallesObras.setArguments(bundle);
-        return fragmentDetallesObras;
-    }
-    */
+
 
 
 

@@ -9,6 +9,17 @@ public class Obra implements Serializable {
     private String name;
     private String artistId;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setArtistId(String artistId) {
+        this.artistId = artistId;
+    }
+
+    public void setUrl(List<String> url) {
+        this.url = url;
+    }
 
     private List<String> url = new ArrayList<>();
 

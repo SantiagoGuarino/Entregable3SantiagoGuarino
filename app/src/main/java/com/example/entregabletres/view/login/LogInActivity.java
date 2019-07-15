@@ -25,6 +25,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
 
 public class LogInActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -99,6 +104,12 @@ public class LogInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            //prueba
+                            UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(mAuth.getUid())
+                                    .build();
+                            user.updateProfile(profileUpdate);
+                            addUserToDatabase();
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -110,5 +121,17 @@ public class LogInActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+    public void addUserToDatabase(){
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        String key = mAuth.getUid();
+
+        HashMap<String,String> userData = new HashMap<>();
+        userData.put("a1_firstValue", mAuth.getUid());
+
+        HashMap<String, Object> update = new HashMap<>();
+        update.put(key, userData);
+
+        database.collection("Users").document(key).set(update, SetOptions.merge());
     }
 }
