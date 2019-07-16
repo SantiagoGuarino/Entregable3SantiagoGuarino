@@ -2,6 +2,7 @@ package com.example.entregabletres.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -14,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,6 +26,7 @@ import com.example.entregabletres.model.Pojo.Obra;
 import com.example.entregabletres.model.Pojo.ObraContainer;
 import com.example.entregabletres.model.util.ResultListener;
 import com.example.entregabletres.view.login.LogInActivity;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.Serializable;
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements FragmentRecyclerO
 private Button logoutButton;
 public static MyAppDataBase db;
 private RecyclerChat recyclerChat = new RecyclerChat();
+private NavigationView navigationView;
+private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +44,17 @@ private RecyclerChat recyclerChat = new RecyclerChat();
         setContentView(R.layout.activity_main);
         db = Room.databaseBuilder(getApplicationContext()
                 , MyAppDataBase.class, "artistas_y_obras").allowMainThreadQueries().build();
-        logoutButton=findViewById(R.id.button_logout);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-            }
-        });
+
+
+       navigationView = findViewById(R.id.navigation_view);
+       navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+           @Override
+           public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+               itemSelected(menuItem);
+               return true;
+           }
+       });
+
 
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
@@ -62,6 +71,16 @@ private RecyclerChat recyclerChat = new RecyclerChat();
 
 
     }
+
+    private void itemSelected(MenuItem menuItem){
+        switch (menuItem.getItemId()){
+            case R.id.nav_logout:
+                FirebaseAuth.getInstance().signOut();
+                break;
+            case R.id.chat:
+                pegarFragment(recyclerChat);
+        }
+    }
     public void getGeneros() {
         ObraController obrasController = new ObraController();
         obrasController.getObras(new ResultListener<ObraContainer>() {
@@ -71,7 +90,7 @@ private RecyclerChat recyclerChat = new RecyclerChat();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(FragmentRecyclerObras.KEY_DATOS, (Serializable) result.getPaints());
                 fragmentRecyclerViewObras.setArguments(bundle);
-                pegarFragment(recyclerChat);
+                pegarFragment(new FragmentRecyclerObras());
             }
         });
 
@@ -80,7 +99,7 @@ private RecyclerChat recyclerChat = new RecyclerChat();
     public void pegarFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.activity_container4, fragment);
+        fragmentTransaction.replace(R.id.main_activity_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
